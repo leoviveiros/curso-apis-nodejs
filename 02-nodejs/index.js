@@ -25,7 +25,7 @@ function obterTelefone(idUsuario) {
                 ddd: 32,
                 telefone: '9876-4321'
             });
-        }, 500);
+        }, 2000);
     });
 }
 
@@ -35,9 +35,38 @@ function obterEndereco(idUsuario, callback) {
             rua: 'Rua dos bobos',
             numero: 0
         });
-    }, 500);
+    }, 2000);
 }
 
+async function main() {
+    try {
+        console.time('medida-promise');
+
+        const usuario = await obterUsuario();
+
+        const resultado = await Promise.all([
+            obterTelefone(usuario.id),
+            obterEnderecoAsync(usuario.id)
+        ]);
+        
+        const telefone = resultado[0];
+        const endereco = resultado[1];
+
+        console.log(`
+            Nome: ${usuario.nome},
+            Telefone: (${telefone.ddd}) ${telefone.telefone},
+            Endereço: ${endereco.rua}, ${endereco.numero}
+        `);
+
+        console.timeEnd('medida-promise');
+    } catch (error) {
+        console.error('DEU RUIM', error);
+    }
+}
+
+main();
+
+/* Codigo antigo usando promises
 const usuarioPromise = obterUsuario();
 
 usuarioPromise
@@ -57,10 +86,11 @@ usuarioPromise
             Endereço: ${usuario.rua}, ${usuario.numero}
         `);
     })
-    .catch(erro => console.log('Deu ruim: ', erro));
+    .catch(erro => console.log('Deu ruim: ', erro)); */
 
 
-/* obterUsuario(function resolverUsuario(erroUsuario, usuario) {
+/* Codigo antigo usando callbacks
+obterUsuario(function resolverUsuario(erroUsuario, usuario) {
     if (erroUsuario) {
         console.error('DEU RUIM pro usuario', erroUsuario);
         return;
