@@ -3,24 +3,30 @@
 1 Obter o número de telefone de um usuário a partir de seu ID
 2 Obter o endereço do usuário pelo ID
  */
+const util = require('util');
+const obterEnderecoAsync = util.promisify(obterEndereco);
 
-function obterUsuario(callback) {
-    setTimeout(() => {
-        return callback(null, {
-            id: 1,
-            nome: 'Fulano',
-            dataNascimento: new Date()
-        });
-    }, 1000);
+function obterUsuario() {
+    return new Promise(resolve => { 
+        setTimeout(() => {
+            return resolve({
+                id: 1,
+                nome: 'Fulano',
+                dataNascimento: new Date()
+            });
+        }, 1000);
+    });
 }
 
-function obterTelefone(idUsuario, callback) {
-    setTimeout(() => {
-        return callback(null, {
-            ddd: 32,
-            telefone: '9876-4321'
-        });
-    }, 2000);
+function obterTelefone(idUsuario) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            return resolve({
+                ddd: 32,
+                telefone: '9876-4321'
+            });
+        }, 500);
+    });
 }
 
 function obterEndereco(idUsuario, callback) {
@@ -29,10 +35,32 @@ function obterEndereco(idUsuario, callback) {
             rua: 'Rua dos bobos',
             numero: 0
         });
-    }, 2000);
+    }, 500);
 }
 
-obterUsuario(function resolverUsuario(erroUsuario, usuario) {
+const usuarioPromise = obterUsuario();
+
+usuarioPromise
+    .then(usuario => obterTelefone(usuario.id)
+        .then(telefone => {
+            return { ...usuario, ...telefone };
+        })
+        .then(resultado => obterEnderecoAsync(resultado.id)
+            .then(endereco => {
+                return { ...resultado, ...endereco };
+            })
+        ))
+    .then(usuario => {
+        console.log(`
+            Nome: ${usuario.nome},
+            Telefone: (${usuario.ddd}) ${usuario.telefone},
+            Endereço: ${usuario.rua}, ${usuario.numero}
+        `);
+    })
+    .catch(erro => console.log('Deu ruim: ', erro));
+
+
+/* obterUsuario(function resolverUsuario(erroUsuario, usuario) {
     if (erroUsuario) {
         console.error('DEU RUIM pro usuario', erroUsuario);
         return;
@@ -57,4 +85,4 @@ obterUsuario(function resolverUsuario(erroUsuario, usuario) {
             `);
         });
     });
-});
+}); */
