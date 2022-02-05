@@ -41,8 +41,29 @@ class Database {
         return result;
     }
 
-    listar() {
+    async listar() {
         return this.obterDadosArquivo();
+    }
+
+    async remover(id) {
+        if (!id) {
+            throw Error('É necessário informar o id do heroi');
+        }
+        
+        const dados = await this.obterDadosArquivo();
+        const indice = dados.findIndex(item => item.id === id);
+
+        if (indice === -1) {
+            throw Error('O heroi não existe');
+        }
+
+        dados.splice(indice, 1);
+
+        return await this.escreverArquivo(dados);
+    }
+
+    async limparDados() {
+        return this.escreverArquivo([]);
     }
 
 }

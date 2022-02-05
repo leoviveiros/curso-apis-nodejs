@@ -1,4 +1,4 @@
-const { deepEqual } = require('assert');
+const { deepEqual, ok } = require('assert');
 
 const database = require('./database');
 
@@ -10,7 +10,11 @@ const HERO_FLASH = {
 
 describe('Suite de manipulacao de herois', () => {
 
-    describe('listar e buscar herois', () => {
+    afterEach(async () => {
+        await database.limparDados();
+    });
+
+    describe('listar, buscar e remover herois', () => {
         beforeEach(async () => {
             await database.escreverArquivo([HERO_FLASH]);
         });
@@ -28,10 +32,17 @@ describe('Suite de manipulacao de herois', () => {
 
             deepEqual(actual, expected);
         });
-    });
 
-    afterEach(async () => {
-        await database.escreverArquivo([]);
+        it('deve remover um heroi, usando arquivos', async () => {            
+            const result = await database.remover(HERO_FLASH.id);
+
+            ok(result);
+
+            const expected = null;
+            const actual = await database.buscarPorId(HERO_FLASH.id);
+
+            deepEqual(actual, expected);
+        });
     });
 
     it('deve cadastrar um heroi, usando arquivos', async () => {
