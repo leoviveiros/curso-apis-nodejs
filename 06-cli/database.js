@@ -62,6 +62,24 @@ class Database {
         return await this.escreverArquivo(dados);
     }
 
+    async atualizar(id, heroi) {
+        if (!id) {
+            throw Error('É necessário informar o id do heroi');
+        }
+        
+        const dados = await this.obterDadosArquivo();
+        const indice = dados.findIndex(item => item.id === id);
+
+        if (indice === -1) {
+            throw Error('O heroi não existe');
+        }
+
+        const atual = dados[indice];
+        dados[indice] = {...atual, ...heroi};
+
+        return await this.escreverArquivo(dados);
+    }
+
     async limparDados() {
         return this.escreverArquivo([]);
     }

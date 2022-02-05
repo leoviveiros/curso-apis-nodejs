@@ -5,7 +5,7 @@ const database = require('./database');
 const HERO_FLASH = {
     id: 1,
     name: 'Flash',
-    power: 'Speed',
+    power: 'Speed'
 }
 
 describe('Suite de manipulacao de herois', () => {
@@ -43,6 +43,22 @@ describe('Suite de manipulacao de herois', () => {
 
             deepEqual(actual, expected);
         });
+
+        it('deve atualizar um heroi, usando arquivos', async () => {
+            const expected = {
+                ...HERO_FLASH,
+                name: 'Batman',
+                power: 'Money'
+            }
+
+            const result = await database.atualizar(expected.id, expected);
+
+            ok(result);
+
+            const actual = await database.buscarPorId(expected.id);
+
+            deepEqual(actual, expected);
+         });
     });
 
     it('deve cadastrar um heroi, usando arquivos', async () => {
