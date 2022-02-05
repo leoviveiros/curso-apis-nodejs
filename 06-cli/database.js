@@ -68,14 +68,14 @@ class Database {
         }
         
         const dados = await this.obterDadosArquivo();
-        const indice = dados.findIndex(item => item.id === id);
+        const indice = dados.findIndex(item => item.id === parseInt(id));
 
         if (indice === -1) {
             throw Error('O heroi não existe');
         }
 
         const atual = dados[indice];
-        dados[indice] = {...atual, ...heroi};
+        dados[indice] = {...atual, ...heroi, id: parseInt(id)};
 
         return await this.escreverArquivo(dados);
     }

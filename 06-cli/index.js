@@ -11,6 +11,7 @@ async function main() {
         .option('-l, --list', 'Listar todos os heróis')
         .option('-c --cadastrar', 'Cadastra um novo herói')
         .option('-r --remover', 'Remove um herói pelo id')
+        .option('-a --atualizar', 'Atualiza um herói pelo id')
         .parse(process.argv);
     
     try {
@@ -30,8 +31,15 @@ async function main() {
         }
 
         if (options.remover) {
-            await Database.remover(options.id);
+            await Database.remover(heroi.id);
             console.log('Herói removido com sucesso!');
+            return
+        }
+
+        if (options.atualizar) {
+            const dadosHeroi = JSON.parse(JSON.stringify(heroi)); // limpa undefinded
+            await Database.atualizar(heroi.id, dadosHeroi);
+            console.log('Herói atualizado com sucesso!');
             return
         }
     } catch (error) {
