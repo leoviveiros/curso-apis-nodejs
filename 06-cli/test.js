@@ -1,4 +1,4 @@
-const { deepEqual, ok } = require('assert');
+const { deepEqual } = require('assert');
 
 const database = require('./database');
 
@@ -24,10 +24,14 @@ describe('Suite de manipulacao de herois', () => {
         deepEqual(actual, expected);
     });
 
-    xit('deve cadastrar um heroi, usando arquivos', async () => {
-        const expected = HERO_FLASH;
+    it('deve cadastrar um heroi, usando arquivos', async () => {
+        const expected = { id: 2, name: 'Batman', power: 'Money' };
+        
+        await database.cadastrar(expected);
 
-        ok(null, expected);
+        const actual = await database.buscarPorId(expected.id);
+
+        deepEqual(actual, expected);
     });
 
 });
