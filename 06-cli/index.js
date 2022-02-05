@@ -12,6 +12,7 @@ async function main() {
         .option('-c --cadastrar', 'Cadastra um novo herói')
         .option('-r --remover', 'Remove um herói pelo id')
         .option('-a --atualizar', 'Atualiza um herói pelo id')
+        .option('-b --buscar', 'Busca um herói pelo id')
         .parse(process.argv);
     
     try {
@@ -40,6 +41,18 @@ async function main() {
             const dadosHeroi = JSON.parse(JSON.stringify(heroi)); // limpa undefinded
             await Database.atualizar(heroi.id, dadosHeroi);
             console.log('Herói atualizado com sucesso!');
+            return
+        }
+
+        if (options.buscar) {
+            const result = await Database.buscarPorId(heroi.id);
+
+            if (!result) {
+                console.log('O heroi não existe');
+                return
+            }
+
+            console.log(result);
             return
         }
     } catch (error) {

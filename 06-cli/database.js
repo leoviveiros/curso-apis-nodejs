@@ -36,8 +36,13 @@ class Database {
     }
 
     async buscarPorId(id) {
+        if (!id) {
+            throw Error('É necessário informar o id do heroi');
+        }
+
         const dados = await this.obterDadosArquivo();
-        const [result] = dados.filter(item => item.id === id);
+        const [result] = dados.filter(item => item.id === parseInt(id));
+
         return result;
     }
 
