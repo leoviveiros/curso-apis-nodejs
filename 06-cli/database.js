@@ -13,7 +13,7 @@ class Database {
     async obterDadosArquivo() {
         const arquivo = await readFileAsync(this.NOME_ARQUIVO, 'utf8');
 
-        return JSON.parse(arquivo.toString());
+        return JSON.parse(arquivo ? arquivo.toString() : '[]');
     }
 
     async escreverArquivo(dados) {
@@ -22,12 +22,12 @@ class Database {
     }
 
     async cadastrar(heroi) {
-        const dados = await this.obterDadosArquivo();
-        const id = heroi.id ? heroi.id : Date.now();
+        const dados = await this.obterDadosArquivo() || [];
+        const id = heroi.id !== undefined ? heroi.id : Date.now();
 
         const heroiComId = {
-            id,
-            ...heroi
+            ...heroi,
+            id
         }
 
         dados.push(heroiComId);
