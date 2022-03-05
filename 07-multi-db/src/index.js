@@ -6,4 +6,6 @@ const contextMongo = new ContextStrategy(new MongoDB());
 contextMongo.create({ name: 'MongoDB' });
 
 const contextProstgres = new ContextStrategy(new ProstgresDB());
-contextProstgres.create({ name: 'ProstgresDB' });
+
+// await contextProstgres.create({ nome: 'Chapolin', poder: 'Marreta' });
+await contextProstgres.read();
