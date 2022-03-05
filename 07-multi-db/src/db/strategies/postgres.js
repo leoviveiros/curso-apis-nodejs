@@ -52,7 +52,9 @@ export class PostgresDB extends Crud {
     }
 
     async create(item) {
-        await this.Herois.create(item);
+        const { dataValues } = await this.Herois.create(item);
+        
+        return dataValues;
     }
 
     async read(query) {
