@@ -18,4 +18,8 @@ export class ContextStrategy {
     delete(id) {
         return this.strategy.delete(id);
     }
+
+    isConnected() {
+        return this.strategy.isConnected();
+    }
 }
