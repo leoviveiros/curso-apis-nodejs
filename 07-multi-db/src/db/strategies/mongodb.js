@@ -45,4 +45,9 @@ export class MongoDB extends Crud {
     create(item) {
         return this.Herois.create(item);
     }
+
+    read(query = {}) {
+        return this.Herois.find(query);
+    }
+    
 }

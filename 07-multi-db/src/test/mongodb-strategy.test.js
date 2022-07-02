@@ -34,4 +34,12 @@ describe('MongoDB Strategy', function () {
         equal(actual.poder, HEROI_CADASTRO.poder);
     })
 
+    it('listar', async function () {
+        await context.create(HEROI_CADASTRO);
+
+        const [result] = await context.read({ nome: HEROI_CADASTRO.nome });
+
+        equal(result.nome, HEROI_CADASTRO.nome);
+        equal(result.poder, HEROI_CADASTRO.poder);
+    })
 })
