@@ -16,9 +16,22 @@ const HEROI_UPDATE = {
 
 describe('MongoDB Strategy', function () {
 
-    it.only('verifica a conexao', async function () {
+    beforeEach(async () => {
+        // await context.delete();
+    });
+
+    it('verifica a conexao', async function () {
         const actual = await context.isConnected();
 
         equal(actual, true);
     })
+
+    it('cadastro', async function () {
+        const actual = await context.create(HEROI_CADASTRO);
+
+        ok(actual.id);
+        equal(actual.nome, HEROI_CADASTRO.nome);
+        equal(actual.poder, HEROI_CADASTRO.poder);
+    })
+
 })
