@@ -60,4 +60,8 @@ export class PostgresDB extends Crud {
     async read(query = {}) {
         return this.Herois.findAll({where: query, raw: true });
     }
+
+    async update(id, item) {
+        return this.Herois.update(item, { where: { id: id }})
+    }
 }

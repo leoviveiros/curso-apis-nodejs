@@ -9,6 +9,11 @@ const HEROI_CADASTRO = {
     poder: 'Marreta'
 }
 
+const HEROI_UPDATE = {
+    nome: 'Batman',
+    poder: 'Dinheiro'
+}
+
 describe('Postgres Strategy', function () {
     it('PostgreSQL Connection', async function () {
         const actual = await context.isConnected();
@@ -29,6 +34,24 @@ describe('Postgres Strategy', function () {
 
         equal(result.nome, HEROI_CADASTRO.nome);
         equal(result.poder, HEROI_CADASTRO.poder);
+    })
+
+    it('atualizar', async () => {
+        await context.create(HEROI_UPDATE);
+
+        const [heroiAtualizacao] = await context.read({ nome: HEROI_UPDATE.nome });
+
+        const heroiAtualizado = {
+            ...heroiAtualizacao,
+            nome: 'Mulher Maravilha'
+        }
+
+        await context.update(heroiAtualizacao.id, heroiAtualizado);
+
+        const [result] = await context.read({ nome: heroiAtualizado.nome });
+
+        equal(result.nome, heroiAtualizado.nome);
+        equal(result.poder, heroiAtualizado.poder);
     })
 
 });
