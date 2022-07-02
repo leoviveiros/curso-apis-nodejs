@@ -53,7 +53,7 @@ export class PostgresDB extends Crud {
 
     async create(item) {
         const { dataValues } = await this.Herois.create(item);
-        
+
         return dataValues;
     }
 
@@ -62,6 +62,13 @@ export class PostgresDB extends Crud {
     }
 
     async update(id, item) {
-        return this.Herois.update(item, { where: { id: id }})
+        return this.Herois.update(item, { where: { id: id } });
     }
+
+    async delete(id) {
+        const query = id ? { id } : {};
+
+        return this.Herois.destroy({ where: query });
+    }
+
 }

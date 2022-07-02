@@ -15,6 +15,12 @@ const HEROI_UPDATE = {
 }
 
 describe('Postgres Strategy', function () {
+    
+    beforeEach(async () => {
+        // exclui todos
+        await context.delete();
+    });
+
     it('PostgreSQL Connection', async function () {
         const actual = await context.isConnected();
 
@@ -30,6 +36,8 @@ describe('Postgres Strategy', function () {
     })
 
     it('listar', async function () {
+        await context.create(HEROI_CADASTRO);
+        
         const [result] = await context.read({ nome: HEROI_CADASTRO.nome });
 
         equal(result.nome, HEROI_CADASTRO.nome);
@@ -53,5 +61,19 @@ describe('Postgres Strategy', function () {
         equal(result.nome, heroiAtualizado.nome);
         equal(result.poder, heroiAtualizado.poder);
     })
+
+    it('excluir', async () => {
+        await context.create(HEROI_CADASTRO);
+
+        const [heroiCadastrado] = await context.read({ nome: HEROI_CADASTRO.nome });
+
+        const count = await context.delete(heroiCadastrado.id);
+
+        equal(1, count)
+
+        const result = await context.read({ nome: HEROI_CADASTRO.nome });
+
+        equal(0, result.length);
+    });
 
 });
