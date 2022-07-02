@@ -54,6 +54,14 @@ export class MongoDB extends Crud {
         return this.Herois.updateOne({ _id: id }, { $set: item });
     }
 
+    delete(id) {
+        if (id) {
+            return this.Herois.deleteOne({ _id: id });
+        } else {
+            return this.Herois.deleteMany({});
+        }
+    }
+
     disconnect() {
         return connection.close();
     }

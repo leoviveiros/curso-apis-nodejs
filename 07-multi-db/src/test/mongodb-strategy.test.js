@@ -17,7 +17,7 @@ const HEROI_UPDATE = {
 describe('MongoDB Strategy', function () {
 
     beforeEach(async () => {
-        // await context.delete();
+        await context.delete();
     });
 
     // afterAll(async () => {
@@ -43,8 +43,6 @@ describe('MongoDB Strategy', function () {
 
         const [result] = await context.read({ nome: HEROI_CADASTRO.nome });
 
-        console.log(`result: ${JSON.stringify(result)}`)
-
         equal(result.nome, HEROI_CADASTRO.nome);
         equal(result.poder, HEROI_CADASTRO.poder);
     })
@@ -66,5 +64,17 @@ describe('MongoDB Strategy', function () {
         equal(result.nome, heroiAtualizado.nome);
         equal(result.poder, heroiAtualizado.poder);
     })
+
+    it('excluir', async () => {
+        await context.create(HEROI_CADASTRO);
+
+        const [heroiCadastrado] = await context.read({ nome: HEROI_CADASTRO.nome });
+
+        await context.delete(heroiCadastrado.id);
+
+        const result = await context.read({ nome: HEROI_CADASTRO.nome });
+
+        equal(0, result.length);
+    });
 
 })

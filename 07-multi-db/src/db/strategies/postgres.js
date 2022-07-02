@@ -12,7 +12,8 @@ export class PostgresDB extends Crud {
         this.driver = new Sequelize('heroes', 'postgres', 'postgres', {
             host: 'localhost',
             dialect: 'postgres',
-            quoteIdentifiers: false
+            quoteIdentifiers: false,
+            logging: false,
         });
     }
 
