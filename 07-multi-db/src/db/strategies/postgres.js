@@ -57,11 +57,7 @@ export class PostgresDB extends Crud {
         return dataValues;
     }
 
-    async read(query) {
-        const result = await this.Herois.findAll({ raw: true });
-
-        console.log('result:', result);
-
-        return result;
+    async read(query = {}) {
+        return this.Herois.findAll({where: query, raw: true });
     }
 }
