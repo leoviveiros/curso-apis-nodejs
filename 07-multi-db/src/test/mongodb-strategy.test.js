@@ -20,6 +20,10 @@ describe('MongoDB Strategy', function () {
         // await context.delete();
     });
 
+    // afterAll(async () => {
+    //     await context.disconnect();
+    // })
+
     it('verifica a conexao', async function () {
         const actual = await context.isConnected();
 
@@ -39,7 +43,28 @@ describe('MongoDB Strategy', function () {
 
         const [result] = await context.read({ nome: HEROI_CADASTRO.nome });
 
+        console.log(`result: ${JSON.stringify(result)}`)
+
         equal(result.nome, HEROI_CADASTRO.nome);
         equal(result.poder, HEROI_CADASTRO.poder);
     })
+
+    it('atualizar', async () => {
+        await context.create(HEROI_UPDATE);
+
+        const [heroiAtualizacao] = await context.read({ nome: HEROI_UPDATE.nome });
+
+        const heroiAtualizado = {
+            ...heroiAtualizacao.toObject(),
+            nome: 'Mulher Maravilha'
+        }
+
+        await context.update(heroiAtualizacao.id, heroiAtualizado);
+
+        const [result] = await context.read({ nome: heroiAtualizado.nome });
+
+        equal(result.nome, heroiAtualizado.nome);
+        equal(result.poder, heroiAtualizado.poder);
+    })
+
 })

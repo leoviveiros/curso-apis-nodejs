@@ -49,5 +49,13 @@ export class MongoDB extends Crud {
     read(query = {}) {
         return this.Herois.find(query);
     }
-    
+
+    update(id, item) {
+        return this.Herois.updateOne({ _id: id }, { $set: item });
+    }
+
+    disconnect() {
+        return connection.close();
+    }
+
 }
