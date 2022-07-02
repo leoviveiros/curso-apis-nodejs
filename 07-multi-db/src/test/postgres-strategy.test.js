@@ -21,6 +21,10 @@ describe('Postgres Strategy', function () {
         await context.delete();
     });
 
+    after(async () => {
+        await context.disconnect();
+    });
+
     it('PostgreSQL Connection', async function () {
         const actual = await context.isConnected();
 

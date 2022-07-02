@@ -72,4 +72,7 @@ export class PostgresDB extends Crud {
         return this.Herois.destroy({ where: query });
     }
 
+    async disconnect() {
+        return this.driver.close();
+    }
 }

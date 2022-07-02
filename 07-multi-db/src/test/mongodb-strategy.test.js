@@ -20,9 +20,9 @@ describe('MongoDB Strategy', function () {
         await context.delete();
     });
 
-    // afterAll(async () => {
-    //     await context.disconnect();
-    // })
+    after(async () => {
+        await context.disconnect();
+    })
 
     it('verifica a conexao', async function () {
         const actual = await context.isConnected();

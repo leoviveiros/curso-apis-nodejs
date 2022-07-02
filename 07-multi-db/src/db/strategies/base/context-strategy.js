@@ -22,4 +22,9 @@ export class ContextStrategy {
     isConnected() {
         return this.strategy.isConnected();
     }
+
+    disconnect() {
+        return this.strategy.disconnect();
+    }
+
 }

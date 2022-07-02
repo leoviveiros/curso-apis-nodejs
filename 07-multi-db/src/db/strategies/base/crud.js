@@ -24,4 +24,9 @@ export class Crud {
     isConnected() {
         throw new NotImplementedException();
     }
+
+    disconnect() {
+        throw new NotImplementedException();
+    }
+
 }
