@@ -19,3 +19,6 @@ http://localhost:8081
 docker exec -it mongodb mongo -u root -p root --authenticationDatabase=admin
 
 db.getSiblingDB('heroes').createUser({user: 'admin', pwd: 'admin', roles: [{ role: 'readWrite', db: 'heroes' }] })
+
+### pacotes
+npm install mongoose
