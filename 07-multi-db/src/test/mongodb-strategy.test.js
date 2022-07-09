@@ -13,7 +13,7 @@ const HEROI_UPDATE = {
     poder: 'Dinheiro'
 }
 
-describe.only('MongoDB Strategy', function () {
+describe('MongoDB Strategy', function () {
 
     let context = {};
 

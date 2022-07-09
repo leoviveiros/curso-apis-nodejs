@@ -1,8 +1,7 @@
 import { equal, ok } from 'assert';
-import { PostgresDB } from '../db/strategies/postgres.js';
 import { ContextStrategy } from '../db/strategies/base/context-strategy.js';
-
-const context = new ContextStrategy(new PostgresDB());
+import { PostgresDB } from '../db/strategies/postgres/postgres.js';
+import { HeroisModel  } from '../db/strategies/postgres/model/herois-model.js';
 
 const HEROI_CADASTRO = {
     nome: 'Chapolin',
@@ -14,8 +13,17 @@ const HEROI_UPDATE = {
     poder: 'Dinheiro'
 }
 
-describe('Postgres Strategy', function () {
-    
+describe('Postgres Strategy', async function () {
+ 
+    let context = {};
+
+    before(async () => {
+        const connection = await PostgresDB.connect();
+        const model = await PostgresDB.defineModel(connection, HeroisModel);
+
+        context = new ContextStrategy(new PostgresDB(connection, model));
+    })
+
     beforeEach(async () => {
         // exclui todos
         await context.delete();
