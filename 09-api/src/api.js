@@ -2,6 +2,11 @@ import { Server } from '@hapi/hapi';
 import { MongoDB } from './db/strategies/mongodb/mongodb.js';
 import { ContextStrategy } from './db/strategies/base/context-strategy.js';
 import { HeroisModel } from './db/strategies/mongodb/model/herois-model.js';
+import { HeroisRoutes } from './routes/herois-routes.js';
+
+function mapRoutes(instance, methods) {
+    return methods.map(method => instance[method]());
+}
 
 async function startApp() {
     const app = new Server({
@@ -11,13 +16,9 @@ async function startApp() {
     const connection = await MongoDB.connect();
     const context = new ContextStrategy(new MongoDB(connection, HeroisModel));
 
-    app.route([{
-        method: 'GET',
-        path: '/herois',
-        handler: (request, h) => {
-            return context.read();
-        }
-    }]);
+    app.route([
+        ...mapRoutes(new HeroisRoutes(context), HeroisRoutes.methods())
+    ]);
 
     await app.start();
 
