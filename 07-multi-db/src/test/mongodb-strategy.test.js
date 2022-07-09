@@ -18,7 +18,7 @@ describe('MongoDB Strategy', function () {
     let context = {};
 
     before(async () => {
-        const connection = MongoDB.connect();
+        const connection = await MongoDB.connect();
 
         context = new ContextStrategy(new MongoDB(connection, HeroisModel));
     });

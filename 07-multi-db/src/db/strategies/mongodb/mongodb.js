@@ -12,16 +12,17 @@ export class MongoDB extends Crud {
         this._model = model;
     }
 
-    static connect() {
-        connect('mongodb://admin:admin@localhost:27017/heroes', error => {
-            if (error) {
-                console.error('Falha ao conectar!', error);
-            }
+    static async connect() {
+        return new Promise((resolve, reject) => {
+            connect('mongodb://admin:admin@localhost:27017/heroes', error => {
+                if (error) {
+                    console.error('Falha ao conectar!', error);
+                    reject(error);
+                }
+            });
+
+            connection.once('open', () => resolve(connection));
         });
-
-        connection.once('open', () => console.log('mongodb rodando!'));
-
-        return connection;
     }
 
     async isConnected() {
