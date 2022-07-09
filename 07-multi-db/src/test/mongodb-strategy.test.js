@@ -1,8 +1,10 @@
 import { equal, ok } from 'assert';
-import { MongoDB } from '../db/strategies/mongodb.js';
 import { ContextStrategy } from '../db/strategies/base/context-strategy.js';
+import { MongoDB } from '../db/strategies/mongodb/mongodb.js';
+import { HeroisModel } from '../db/strategies/mongodb/model/herois-model.js';
 
-const context = new ContextStrategy(new MongoDB());
+const connection = MongoDB.connect();
+const context = new ContextStrategy(new MongoDB(connection, HeroisModel));
 
 const HEROI_CADASTRO = {
     nome: 'Chapolin',
