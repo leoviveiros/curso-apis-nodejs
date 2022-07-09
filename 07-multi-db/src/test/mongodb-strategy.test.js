@@ -3,9 +3,6 @@ import { ContextStrategy } from '../db/strategies/base/context-strategy.js';
 import { MongoDB } from '../db/strategies/mongodb/mongodb.js';
 import { HeroisModel } from '../db/strategies/mongodb/model/herois-model.js';
 
-const connection = MongoDB.connect();
-const context = new ContextStrategy(new MongoDB(connection, HeroisModel));
-
 const HEROI_CADASTRO = {
     nome: 'Chapolin',
     poder: 'Marreta'
@@ -16,7 +13,15 @@ const HEROI_UPDATE = {
     poder: 'Dinheiro'
 }
 
-describe('MongoDB Strategy', function () {
+describe.only('MongoDB Strategy', function () {
+
+    let context = {};
+
+    before(async () => {
+        const connection = MongoDB.connect();
+
+        context = new ContextStrategy(new MongoDB(connection, HeroisModel));
+    });
 
     beforeEach(async () => {
         await context.delete();
