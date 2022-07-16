@@ -27,7 +27,7 @@ export class HeroisRoutes extends BaseRoute {
             handler: (request) => {
                 try {
                     const { skip, limit, nome } = request.query;
-                    const query = nome ? { nome } : undefined;
+                    const query = nome ? { nome: { $regex: `.*${nome}*.`} } : {};
 
                     return this.db.read(query, skip, limit);
                 } catch (error) {

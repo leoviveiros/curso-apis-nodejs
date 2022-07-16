@@ -59,16 +59,12 @@ describe('API Herois test', () => {
     })
 
     it('filtrar por nome', async () => {
-        for (let i = 0; i < 5; i++) {
-            await context.create({
-                nome: `Heroi_${i}`,
-                poder: 'Voo'
-            });
-        }
+        await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
+        await context.create({ nome: `Super Homem`, poder: 'Força' });
 
         const result = await api.inject({
             method: 'GET',
-            url: '/herois?nome=Heroi_2'
+            url: '/herois?nome=Super Homem'
         });
 
         const dados = JSON.parse(result.payload);
@@ -76,7 +72,24 @@ describe('API Herois test', () => {
 
         equal(statusCode, 200);
         equal(dados.length, 1);
-        equal(dados[0].nome, 'Heroi_2');
+        equal(dados[0].nome, 'Super Homem');
+    })
+
+    it('filtrar por nome parcial', async () => {
+        await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
+        await context.create({ nome: `Super Homem`, poder: 'Força' });
+
+        const result = await api.inject({
+            method: 'GET',
+            url: '/herois?nome=Aranha'
+        });
+
+        const dados = JSON.parse(result.payload);
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 200);
+        equal(dados.length, 1);
+        equal(dados[0].nome, 'Homem Aranha');
     })
 
     it('faz uma request invalida', async () => {
