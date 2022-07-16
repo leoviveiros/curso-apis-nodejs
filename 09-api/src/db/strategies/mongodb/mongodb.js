@@ -41,8 +41,8 @@ export class MongoDB extends Crud {
         return this._model.create(item);
     }
 
-    read(query = {}) {
-        return this._model.find(query);
+    read(query = {}, skip = 0, limit = 10) {
+        return this._model.find(query).skip(skip).limit(limit);
     }
 
     update(id, item) {
