@@ -58,4 +58,25 @@ describe('API Herois test', () => {
         equal(dados.length, 10);
     })
 
+    it('filtrar por nome', async () => {
+        for (let i = 0; i < 5; i++) {
+            await context.create({
+                nome: `Heroi_${i}`,
+                poder: 'Voo'
+            });
+        }
+
+        const result = await api.inject({
+            method: 'GET',
+            url: '/herois?nome=Heroi_2'
+        });
+
+        const dados = JSON.parse(result.payload);
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 200);
+        equal(dados.length, 1);
+        equal(dados[0].nome, 'Heroi_2');
+    })
+
 });
