@@ -1,4 +1,5 @@
 import { BaseRoute } from "./base-route.js";
+import Joi from 'joi';
 
 export class HeroisRoutes extends BaseRoute {
 
@@ -11,6 +12,18 @@ export class HeroisRoutes extends BaseRoute {
         return {
             path: '/herois',
             method: 'GET',
+            config: {
+                validate: {
+                    failAction: (request, h, error) => {
+                        throw error;
+                    },
+                    query: {
+                        skip: Joi.number().integer().default(0),
+                        limit: Joi.number().integer().default(10),
+                        nome: Joi.string().min(3).max(100)
+                    }
+                }
+            },
             handler: (request) => {
                 try {
                     const { skip, limit, nome } = request.query;

@@ -79,4 +79,15 @@ describe('API Herois test', () => {
         equal(dados[0].nome, 'Heroi_2');
     })
 
+    it('faz uma request invalida', async () => {
+        const result = await api.inject({
+            method: 'GET',
+            url: '/herois?skip=y'
+        });
+
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 400);
+    })
+
 });
