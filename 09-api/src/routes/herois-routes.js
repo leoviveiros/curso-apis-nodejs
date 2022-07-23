@@ -66,4 +66,37 @@ export class HeroisRoutes extends BaseRoute {
             }
         }
     }
+
+    update() {
+        return {
+            path: '/herois/{id}',
+            method: 'PATCH',
+            config: {
+                validate: {
+                    failAction: this._failAction,
+                    params: {
+                        id: Joi.string().required()
+                    },
+                    payload: {
+                        nome: Joi.string().min(3).max(100),
+                        poder: Joi.string().min(2).max(30)
+                    }
+                },
+                handler: async (request) => {
+                    try {
+                        const { payload } = request;
+                        
+                        const result = await this.db.update(request.params.id, payload);
+
+                        return {
+                            message: result.modifiedCount ? 'Herói atualizado com sucesso' : 'Não foi possível atualizar o herói'
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        return 'Erro ao criar o herói';
+                    }
+                }
+            }
+        }
+    }
 }

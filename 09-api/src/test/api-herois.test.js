@@ -124,4 +124,26 @@ describe('API Herois test', () => {
         equal(heroiResult.poder, heroi.poder);
     })
 
+    it('deve atualizar um heroi', async () => {
+        const heroi = await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
+
+        const result = await api.inject({
+            method: 'PATCH',
+            url: `/herois/${heroi._id}`,
+            payload: {
+                nome: 'Mulher Aranha'
+            }
+        });
+
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 200);
+
+        const [heroiAtualizado] = await context.read({ _id: heroi._id });
+
+        equal(heroiAtualizado._id.toString(), heroi._id.toString());
+        equal(heroiAtualizado.nome, 'Mulher Aranha');
+        equal(heroiAtualizado.poder, heroi.poder);
+    })
+
 });
