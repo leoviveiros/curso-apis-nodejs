@@ -3,12 +3,15 @@ import { MongoDB } from './db/strategies/mongodb/mongodb.js';
 import { ContextStrategy } from './db/strategies/base/context-strategy.js';
 import { HeroisModel } from './db/strategies/mongodb/model/herois-model.js';
 import { HeroisRoutes } from './routes/herois-routes.js';
+import { AuthRoutes } from './routes/auth-routes.js';
 
 import Vision from '@hapi/vision';
 import Inert from '@hapi/inert';
 import HapiSwagger from 'hapi-swagger';
 
 import Joi from 'joi';
+
+const JWT_SECRET = 'secret-jwt-key';
 
 function mapRoutes(instance, methods) {
     return methods.map(method => instance[method]());
@@ -41,7 +44,8 @@ async function startApp() {
     app.validator(Joi);
 
     app.route([
-        ...mapRoutes(new HeroisRoutes(context), HeroisRoutes.methods())
+        ...mapRoutes(new HeroisRoutes(context), HeroisRoutes.methods()),
+        ...mapRoutes(new AuthRoutes(JWT_SECRET), AuthRoutes.methods())
     ]);
 
     await app.start();
