@@ -4,6 +4,10 @@ import { ContextStrategy } from './db/strategies/base/context-strategy.js';
 import { HeroisModel } from './db/strategies/mongodb/model/herois-model.js';
 import { HeroisRoutes } from './routes/herois-routes.js';
 
+import Vision from '@hapi/vision';
+import Inert from '@hapi/inert';
+import HapiSwagger from 'hapi-swagger';
+
 import Joi from 'joi';
 
 function mapRoutes(instance, methods) {
@@ -17,6 +21,22 @@ async function startApp() {
 
     const connection = await MongoDB.connect();
     const context = new ContextStrategy(new MongoDB(connection, HeroisModel));
+
+    const swaggerOptions = {
+        info: {
+            title: 'API Herois',
+            version: 'v1.0'
+        }
+    }
+
+    await app.register([
+        Vision,
+        Inert,
+        {
+            plugin: HapiSwagger,
+            options: swaggerOptions 
+        }
+    ]);
 
     app.validator(Joi);
 

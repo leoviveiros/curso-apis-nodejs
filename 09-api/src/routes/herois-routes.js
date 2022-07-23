@@ -18,6 +18,9 @@ export class HeroisRoutes extends BaseRoute {
             path: '/herois',
             method: 'GET',
             config: {
+                tags: ['api'],
+                description: 'Lista todos os heróis',
+                notes: 'Retorna uma lista de heróis',
                 validate: {
                     failAction: this._failAction,
                     query: {
@@ -46,6 +49,8 @@ export class HeroisRoutes extends BaseRoute {
             path: '/herois',
             method: 'POST',
             config: {
+                tags: ['api'],
+                description: 'Cria um novo herói',
                 validate: {
                     failAction: this._failAction,
                     payload: {
@@ -73,6 +78,8 @@ export class HeroisRoutes extends BaseRoute {
             path: '/herois/{id}',
             method: 'PATCH',
             config: {
+                tags: ['api'],
+                description: 'Atualiza um herói',
                 validate: {
                     failAction: this._failAction,
                     params: {
@@ -110,6 +117,8 @@ export class HeroisRoutes extends BaseRoute {
             path: '/herois/{id}',
             method: 'DELETE',
             config: {
+                tags: ['api'],
+                description: 'Remove um herói',
                 validate: {
                     failAction: this._failAction,
                     params: {

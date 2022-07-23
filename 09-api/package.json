@@ -9,7 +9,7 @@
     "test:watch": "mocha src/test/*.js -w",
     "up": "docker-compose up -d",
     "down": "docker-compose down",
-    "start": "node src/api.js"
+    "start": "nodemon src/api.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,9 @@
   "dependencies": {
     "@hapi/boom": "^10.0.0",
     "@hapi/hapi": "^20.2.2",
+    "@hapi/inert": "^7.0.0",
+    "@hapi/vision": "^7.0.0",
+    "hapi-swagger": "^14.5.5",
     "joi": "^17.6.0",
     "mongoose": "^6.4.2",
     "pg": "^8.7.3",
