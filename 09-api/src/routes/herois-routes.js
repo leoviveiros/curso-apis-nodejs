@@ -93,7 +93,34 @@ export class HeroisRoutes extends BaseRoute {
                         }
                     } catch (error) {
                         console.error(error);
-                        return 'Erro ao criar o herói';
+                        return 'Erro ao atualizar o herói';
+                    }
+                }
+            }
+        }
+    }
+
+    delete() {
+        return {
+            path: '/herois/{id}',
+            method: 'DELETE',
+            config: {
+                validate: {
+                    failAction: this._failAction,
+                    params: {
+                        id: Joi.string().required()
+                    }
+                },
+                handler: async (request) => {
+                    try {
+                        const result = await this.db.delete(request.params.id);
+
+                        return {
+                            message: result.deleteCount ? 'Herói excluido com sucesso' : 'Não foi possível excluir o herói'
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        return 'Erro ao excluir o herói';
                     }
                 }
             }

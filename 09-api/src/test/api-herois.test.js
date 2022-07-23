@@ -146,4 +146,20 @@ describe('API Herois test', () => {
         equal(heroiAtualizado.poder, heroi.poder);
     })
 
+    it('deve remover um heroi', async () => {
+        const heroi = await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
+
+        const result = await api.inject({
+            method: 'DELETE',
+            url: `/herois/${heroi._id}`
+        });
+
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 200);
+
+        const herois = await context.read({ _id: heroi._id });
+
+        equal(herois.length, 0);
+    });
 });
