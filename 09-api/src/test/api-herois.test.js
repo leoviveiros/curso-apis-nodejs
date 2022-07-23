@@ -103,4 +103,25 @@ describe('API Herois test', () => {
         equal(statusCode, 400);
     })
 
+    it('cadastrar um heroi', async () => {
+        const heroi = {
+            nome: 'Homem Aranha',
+            poder: 'Teia'
+        };
+
+        const result = await api.inject({
+            method: 'POST',
+            url: '/herois',
+            payload: heroi
+        });
+
+        const statusCode = result.statusCode;
+        const heroiResult = JSON.parse(result.payload);
+
+        equal(statusCode, 200);
+        ok(heroiResult._id);
+        equal(heroiResult.nome, heroi.nome);
+        equal(heroiResult.poder, heroi.poder);
+    })
+
 });
