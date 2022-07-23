@@ -48,6 +48,10 @@ async function startApp() {
 
     console.log(`Server running on port ${app.info.port}`);
 
+    app.events.on('stop', () => {
+        connection.close();
+    });
+
     return app;
 }
 
