@@ -2,6 +2,10 @@ import { BaseRoute } from "./base-route.js";
 import Joi from 'joi';
 import { internal, preconditionFailed } from '@hapi/boom';
 
+const headers = Joi.object({
+    Authorization: Joi.string().optional().token('Bearer').description('Bearer token')
+}).unknown(true);
+
 export class HeroisRoutes extends BaseRoute {
 
     constructor(db) {
@@ -23,6 +27,7 @@ export class HeroisRoutes extends BaseRoute {
                 notes: 'Retorna uma lista de heróis',
                 validate: {
                     failAction: this._failAction,
+                    headers,
                     query: {
                         skip: Joi.number().integer().default(0),
                         limit: Joi.number().integer().default(10),
@@ -53,6 +58,7 @@ export class HeroisRoutes extends BaseRoute {
                 description: 'Cria um novo herói',
                 validate: {
                     failAction: this._failAction,
+                    headers,
                     payload: {
                         nome: Joi.string().min(3).max(100).required(),
                         poder: Joi.string().min(2).max(30).required()
@@ -82,6 +88,7 @@ export class HeroisRoutes extends BaseRoute {
                 description: 'Atualiza um herói',
                 validate: {
                     failAction: this._failAction,
+                    headers,
                     params: {
                         id: Joi.string().required()
                     },
@@ -121,6 +128,7 @@ export class HeroisRoutes extends BaseRoute {
                 description: 'Remove um herói',
                 validate: {
                     failAction: this._failAction,
+                    headers,
                     params: {
                         id: Joi.string().required()
                     }

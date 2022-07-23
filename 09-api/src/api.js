@@ -5,6 +5,7 @@ import { HeroisModel } from './db/strategies/mongodb/model/herois-model.js';
 import { HeroisRoutes } from './routes/herois-routes.js';
 import { AuthRoutes } from './routes/auth-routes.js';
 
+import HapiJwt from '@hapi/jwt';
 import Vision from '@hapi/vision';
 import Inert from '@hapi/inert';
 import HapiSwagger from 'hapi-swagger';
@@ -33,6 +34,7 @@ async function startApp() {
     }
 
     await app.register([
+        HapiJwt,
         Vision,
         Inert,
         {
@@ -43,9 +45,37 @@ async function startApp() {
 
     app.validator(Joi);
 
+    app.auth.strategy('jwt_strategy', 'jwt', {
+        keys: {
+            key: JWT_SECRET,
+            algorithms: ['HS256']
+        },
+        verify: {
+            aud: false,
+            iss: false,
+            sub: false,
+            nbf: true,
+            exp: true,
+            maxAgeSec: 14400, // 4 hours
+            timeSkewSec: 15
+        },
+        validate: (artifacts, request, h) => {
+            // pode verificar se o usuário continua ativo e válido
+            console.log('validate **************');
+            console.log(`artifacts.decoded.payload: ${JSON.stringify(artifacts.decoded.payload)}`)
+            
+            return {
+                isValid: true,
+                credentials: { user: artifacts.decoded.payload.username }
+            }
+        }
+    });
+
+    app.auth.default('jwt_strategy');
+
     app.route([
+        ...mapRoutes(new AuthRoutes(JWT_SECRET), AuthRoutes.methods()),
         ...mapRoutes(new HeroisRoutes(context), HeroisRoutes.methods()),
-        ...mapRoutes(new AuthRoutes(JWT_SECRET), AuthRoutes.methods())
     ]);
 
     await app.start();

@@ -2,7 +2,7 @@ import { equal, ok } from 'assert';
 
 import _api from '../api.js';
 
-describe.only('API Herois test', () => {
+describe('API Herois test', () => {
 
     let api;
     const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjU4NjA3MTEyfQ.KYfbRBwUw3hC6XiPysUDbO3RZynCugV0dETZoN--ovw';
