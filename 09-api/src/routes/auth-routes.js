@@ -25,6 +25,7 @@ export class AuthRoutes extends BaseRoute {
             path: '/login',
             method: 'POST',
             config: {
+                auth: false,
                 tags: ['api'],
                 description: 'Faz o login do usuário',
                 notes: 'Retorna um token de autenticação',

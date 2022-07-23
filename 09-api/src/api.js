@@ -5,6 +5,7 @@ import { HeroisModel } from './db/strategies/mongodb/model/herois-model.js';
 import { HeroisRoutes } from './routes/herois-routes.js';
 import { AuthRoutes } from './routes/auth-routes.js';
 
+import HapiJwt from '@hapi/jwt';
 import Vision from '@hapi/vision';
 import Inert from '@hapi/inert';
 import HapiSwagger from 'hapi-swagger';
@@ -33,6 +34,7 @@ async function startApp() {
     }
 
     await app.register([
+        HapiJwt,
         Vision,
         Inert,
         {
@@ -42,6 +44,28 @@ async function startApp() {
     ]);
 
     app.validator(Joi);
+
+    app.auth.strategy('jwt', 'jwt', {
+        keys: JWT_SECRET,
+        verify: {
+            aud: 'urn:audience:test',
+            iss: 'urn:issuer:test',
+            sub: false,
+            nbf: true,
+            exp: true,
+            maxAgeSec: 14400, // 4 hours
+            timeSkewSec: 15
+        },
+        validate: (decoded, request) => {
+            // verifica se o usuário continua ativo e válido
+
+            return {
+                isValid: true
+            }
+        }
+    });
+
+    app.auth.default('jwt');
 
     app.route([
         ...mapRoutes(new HeroisRoutes(context), HeroisRoutes.methods()),
