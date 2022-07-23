@@ -1,5 +1,6 @@
 import { BaseRoute } from "./base-route.js";
 import Joi from 'joi';
+import { internal, preconditionFailed } from '@hapi/boom';
 
 export class HeroisRoutes extends BaseRoute {
 
@@ -34,7 +35,7 @@ export class HeroisRoutes extends BaseRoute {
                     return this.db.read(query, skip, limit);
                 } catch (error) {
                     console.error(error);
-                    return 'Erro ao listar os heróis';
+                    return internal();
                 }
             }
         }
@@ -61,7 +62,7 @@ export class HeroisRoutes extends BaseRoute {
                     return result;
                 } catch (error) {
                     console.error(error);
-                    return 'Erro ao criar o herói';
+                    return internal();
                 }
             }
         }
@@ -88,12 +89,16 @@ export class HeroisRoutes extends BaseRoute {
                         
                         const result = await this.db.update(request.params.id, payload);
 
-                        return {
-                            message: result.modifiedCount ? 'Herói atualizado com sucesso' : 'Não foi possível atualizar o herói'
+                        if (result.modifiedCount) {
+                            return {
+                                message: 'Herói atualizado com sucesso'
+                            }
                         }
+
+                        return preconditionFailed('Herói não encontrado');
                     } catch (error) {
                         console.error(error);
-                        return 'Erro ao atualizar o herói';
+                        return internal();
                     }
                 }
             }
@@ -115,12 +120,16 @@ export class HeroisRoutes extends BaseRoute {
                     try {
                         const result = await this.db.delete(request.params.id);
 
-                        return {
-                            message: result.deleteCount ? 'Herói excluido com sucesso' : 'Não foi possível excluir o herói'
+                        if (result.deletedCount) {
+                            return {
+                                message: 'Herói removido com sucesso'
+                            }
                         }
+
+                        return preconditionFailed('Herói não encontrado');
                     } catch (error) {
                         console.error(error);
-                        return 'Erro ao excluir o herói';
+                        return internal();
                     }
                 }
             }

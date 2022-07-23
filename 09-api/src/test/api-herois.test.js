@@ -146,6 +146,20 @@ describe('API Herois test', () => {
         equal(heroiAtualizado.poder, heroi.poder);
     })
 
+    it('não deve atualizar um heroi inexistente', async () => {
+        const result = await api.inject({
+            method: 'PATCH',
+            url: `/herois/62dc2704a97ab6183fb3afa6`,
+            payload: {
+                nome: 'Mulher Aranha'
+            }
+        });
+
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 412);
+    })
+
     it('deve remover um heroi', async () => {
         const heroi = await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
 
@@ -162,4 +176,16 @@ describe('API Herois test', () => {
 
         equal(herois.length, 0);
     });
+
+    it('não deve remover um heroi inexistente', async () => {
+        const result = await api.inject({
+            method: 'DELETE',
+            url: `/herois/62dc2704a97ab6183fb3afa6`
+        });
+
+        const statusCode = result.statusCode;
+
+        equal(statusCode, 412);
+    });
+
 });
