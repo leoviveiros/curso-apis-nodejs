@@ -61,8 +61,6 @@ async function startApp() {
         },
         validate: (artifacts, request, h) => {
             // pode verificar se o usuário continua ativo e válido
-            console.log('validate **************');
-            console.log(`artifacts.decoded.payload: ${JSON.stringify(artifacts.decoded.payload)}`)
             
             return {
                 isValid: true,
