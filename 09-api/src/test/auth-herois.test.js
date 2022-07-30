@@ -12,19 +12,18 @@ describe('Auth Herois test', () => {
 
     let api;
     let context;
-    let connection;
     let admin;
 
     before(async () => {
         api = await _api;
 
-        connection = await PostgresDB.connect();
+        const connection = await PostgresDB.connect();
         const usuarioModel = await PostgresDB.defineModel(connection, UsuarioModel);
         context = new ContextStrategy(new PostgresDB(connection, usuarioModel));
     });
 
     after(async () => {
-        await connection.close();
+        await context.disconnect();
         await api.stop();
     });
 

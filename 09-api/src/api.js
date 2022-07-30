@@ -91,8 +91,8 @@ async function startApp() {
     console.log(`Server running on port ${app.info.port}`);
 
     app.events.on('stop',  async () => {
-        await mongoConnection.close();
-        await postgresConnection.close();
+        await mongoContext.disconnect();
+        await postgresContext.disconnect();
     });
 
     return app;
