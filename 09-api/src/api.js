@@ -1,7 +1,13 @@
 import { Server } from '@hapi/hapi';
-import { MongoDB } from './db/strategies/mongodb/mongodb.js';
+
 import { ContextStrategy } from './db/strategies/base/context-strategy.js';
+
+import { MongoDB } from './db/strategies/mongodb/mongodb.js';
 import { HeroisModel } from './db/strategies/mongodb/model/herois-model.js';
+
+import { PostgresDB } from './db/strategies/postgres/postgres.js';
+import { UsuarioModel } from './db/strategies/postgres/model/usuario-model.js';
+
 import { HeroisRoutes } from './routes/herois-routes.js';
 import { AuthRoutes } from './routes/auth-routes.js';
 
@@ -23,8 +29,12 @@ async function startApp() {
         port: 3000
     });
 
-    const connection = await MongoDB.connect();
-    const context = new ContextStrategy(new MongoDB(connection, HeroisModel));
+    const mongoConnection = await MongoDB.connect();
+    const mongoContext = new ContextStrategy(new MongoDB(mongoConnection, HeroisModel));
+
+    const postgresConnection = await PostgresDB.connect();
+    const usuarioModel = await PostgresDB.defineModel(postgresConnection, UsuarioModel);
+    const postgresContext = new ContextStrategy(new PostgresDB(postgresConnection, usuarioModel));
 
     const swaggerOptions = {
         info: {
@@ -72,16 +82,17 @@ async function startApp() {
     app.auth.default('jwt_strategy');
 
     app.route([
-        ...mapRoutes(new AuthRoutes(JWT_SECRET), AuthRoutes.methods()),
-        ...mapRoutes(new HeroisRoutes(context), HeroisRoutes.methods()),
+        ...mapRoutes(new AuthRoutes(JWT_SECRET, postgresContext), AuthRoutes.methods()),
+        ...mapRoutes(new HeroisRoutes(mongoContext), HeroisRoutes.methods()),
     ]);
 
     await app.start();
 
     console.log(`Server running on port ${app.info.port}`);
 
-    app.events.on('stop', () => {
-        connection.close();
+    app.events.on('stop',  async () => {
+        await mongoConnection.close();
+        await postgresConnection.close();
     });
 
     return app;

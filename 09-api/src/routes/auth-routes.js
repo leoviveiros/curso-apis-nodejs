@@ -1,8 +1,9 @@
 import { BaseRoute } from "./base-route.js";
 import { unauthorized } from "@hapi/boom";
 import HapiJwt from '@hapi/jwt';
-
 import Joi from 'joi';
+
+import { PasswordHelper } from '../helpers/password-helper.js';
 
 const ADMIN = {
     username: 'admin',
@@ -11,9 +12,10 @@ const ADMIN = {
 
 export class AuthRoutes extends BaseRoute {
 
-    constructor(secret) {
+    constructor(secret, db) {
         super();
         this.secret = secret;
+        this.db = db;
     }
 
     _failAction(request, h, error) {
@@ -40,7 +42,15 @@ export class AuthRoutes extends BaseRoute {
             handler: async (request) => {
                 const { username, password } = request.payload;
 
-                if (username.toLowerCase() !== ADMIN.username || password !== ADMIN.password) {
+                const [usuario] = await this.db.read({ username: username.toLowerCase() });
+
+                if (!usuario) {
+                    return unauthorized('Usuário ou senha inválidos');
+                }
+
+                const isValid = await PasswordHelper.compare(password, usuario.password);
+
+                if (!isValid) {
                     return unauthorized('Usuário ou senha inválidos');
                 }
 
