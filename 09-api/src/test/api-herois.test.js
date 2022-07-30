@@ -1,6 +1,7 @@
 import { equal, ok } from 'assert';
 import _api from '../api.js';
 import mongoose from 'mongoose';
+import HapiJwt from '@hapi/jwt';
 
 import { MongoDB } from '../db/strategies/mongodb/mongodb.js';
 import { ContextStrategy } from '../db/strategies/base/context-strategy.js';
@@ -10,10 +11,19 @@ describe('API Herois test', () => {
     
     let api;
     let context;
+    let headers;
 
     before(async () => {
         api = await _api;
         context = new ContextStrategy(new MongoDB(mongoose.connection, HeroisModel));
+        
+        const token = HapiJwt.token.generate(
+            { username: 'teste' },
+            { key: 'secret-jwt-key', algorithm: 'HS256' },
+            { ttlSec: 14400 }
+        );
+
+        headers = { 'Authorization': `Bearer ${token}` };
     });
 
     after(async () => {
@@ -28,6 +38,7 @@ describe('API Herois test', () => {
     it('listar', async () => {
         const result = await api.inject({
             method: 'GET',
+            headers,
             url: '/herois'
         });
 
@@ -48,6 +59,7 @@ describe('API Herois test', () => {
 
         const result = await api.inject({
             method: 'GET',
+            headers,
             url: '/herois?skip=0&limit=10'
         });
 
@@ -64,6 +76,7 @@ describe('API Herois test', () => {
 
         const result = await api.inject({
             method: 'GET',
+            headers,
             url: '/herois?nome=Super Homem'
         });
 
@@ -81,6 +94,7 @@ describe('API Herois test', () => {
 
         const result = await api.inject({
             method: 'GET',
+            headers,
             url: '/herois?nome=Aranha'
         });
 
@@ -95,6 +109,7 @@ describe('API Herois test', () => {
     it('faz uma request invalida', async () => {
         const result = await api.inject({
             method: 'GET',
+            headers,
             url: '/herois?skip=y'
         });
 
@@ -112,6 +127,7 @@ describe('API Herois test', () => {
         const result = await api.inject({
             method: 'POST',
             url: '/herois',
+            headers,
             payload: heroi
         });
 
@@ -130,6 +146,7 @@ describe('API Herois test', () => {
         const result = await api.inject({
             method: 'PATCH',
             url: `/herois/${heroi._id}`,
+            headers,
             payload: {
                 nome: 'Mulher Aranha'
             }
@@ -150,6 +167,7 @@ describe('API Herois test', () => {
         const result = await api.inject({
             method: 'PATCH',
             url: `/herois/62dc2704a97ab6183fb3afa6`,
+            headers,
             payload: {
                 nome: 'Mulher Aranha'
             }
@@ -165,6 +183,7 @@ describe('API Herois test', () => {
 
         const result = await api.inject({
             method: 'DELETE',
+            headers,
             url: `/herois/${heroi._id}`
         });
 
@@ -180,6 +199,7 @@ describe('API Herois test', () => {
     it('não deve remover um heroi inexistente', async () => {
         const result = await api.inject({
             method: 'DELETE',
+            headers,
             url: `/herois/62dc2704a97ab6183fb3afa6`
         });
 

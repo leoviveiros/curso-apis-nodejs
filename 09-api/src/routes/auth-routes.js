@@ -1,7 +1,6 @@
 import { BaseRoute } from "./base-route.js";
 import { unauthorized } from "@hapi/boom";
 import HapiJwt from '@hapi/jwt';
-// import Jwt from 'jsonwebtoken';
 
 import Joi from 'joi';
 
@@ -45,19 +44,10 @@ export class AuthRoutes extends BaseRoute {
                     return unauthorized('Usuário ou senha inválidos');
                 }
 
-                // const token = Jwt.sign({ username }, this.secret);
-
                 const token = HapiJwt.token.generate(
-                    {
-                        username
-                    },
-                    {
-                        key: this.secret,
-                        algorithm: 'HS256'
-                    },
-                    {
-                        ttlSec: 14400 // 4 hours
-                    }
+                    { username },
+                    { key: this.secret, algorithm: 'HS256' },
+                    { ttlSec: 14400 } // 4 hours
                 );
 
                 return {
