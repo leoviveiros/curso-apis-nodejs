@@ -58,6 +58,21 @@ describe('Auth Herois test', () => {
         
         ok(token);
         ok(token.length > 10);
+    });
+
+    it('deve retornar um erro ao obter um token com senha incorreta', async () => {
+        const result = await api.inject({
+            method: 'POST',
+            url: '/login',
+            payload: {
+                username: 'admin',
+                password: '321'
+            }
+        });
+
+        const { statusCode } = result;
+
+        equal(statusCode, 401);
     })
 
 });
