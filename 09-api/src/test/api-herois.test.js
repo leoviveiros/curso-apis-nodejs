@@ -7,15 +7,33 @@ import { MongoDB } from '../db/strategies/mongodb/mongodb.js';
 import { ContextStrategy } from '../db/strategies/base/context-strategy.js';
 import { HeroisModel } from '../db/strategies/mongodb/model/herois-model.js';
 
+import { PostgresDB } from '../db/strategies/postgres/postgres.js';
+import { UsuarioModel } from '../db/strategies/postgres/model/usuario-model.js';
+
+import { PasswordHelper } from '../helpers/password-helper.js';
+
 describe('API Herois test', () => {
     
     let api;
-    let context;
+    let mongoContext;
     let headers;
+    let testUser;
+    let postgresContext;
 
     before(async () => {
         api = await _api;
-        context = new ContextStrategy(new MongoDB(mongoose.connection, HeroisModel));
+        mongoContext = new ContextStrategy(new MongoDB(mongoose.connection, HeroisModel));
+
+        const pgConnection = await PostgresDB.connect();
+        const usuarioModel = await PostgresDB.defineModel(pgConnection, UsuarioModel);
+        postgresContext = new ContextStrategy(new PostgresDB(pgConnection, usuarioModel));
+
+        const password = await PasswordHelper.hash('123');
+
+        testUser = await postgresContext.create({
+            username: 'teste',
+            password,
+        });
         
         const token = HapiJwt.token.generate(
             { username: 'teste' },
@@ -28,11 +46,14 @@ describe('API Herois test', () => {
 
     after(async () => {
         await api.stop();
-        await mongoose.connection.close();
+        await mongoContext.disconnect();
+
+        await postgresContext.delete(testUser.id);
+        await postgresContext.disconnect();
     });
 
     afterEach(async () => {
-        await context.delete();
+        await mongoContext.delete();
     })
 
     it('listar', async () => {
@@ -51,7 +72,7 @@ describe('API Herois test', () => {
 
     it('listar somente 10 itens', async () => {
         for (let i = 0; i < 15; i++) {
-            await context.create({
+            await mongoContext.create({
                 nome: `Heroi ${i}`,
                 poder: 'Voo'
             });
@@ -71,8 +92,8 @@ describe('API Herois test', () => {
     })
 
     it('filtrar por nome', async () => {
-        await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
-        await context.create({ nome: `Super Homem`, poder: 'Força' });
+        await mongoContext.create({ nome: `Homem Aranha`, poder: 'Teia' });
+        await mongoContext.create({ nome: `Super Homem`, poder: 'Força' });
 
         const result = await api.inject({
             method: 'GET',
@@ -89,8 +110,8 @@ describe('API Herois test', () => {
     })
 
     it('filtrar por nome parcial', async () => {
-        await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
-        await context.create({ nome: `Super Homem`, poder: 'Força' });
+        await mongoContext.create({ nome: `Homem Aranha`, poder: 'Teia' });
+        await mongoContext.create({ nome: `Super Homem`, poder: 'Força' });
 
         const result = await api.inject({
             method: 'GET',
@@ -141,7 +162,7 @@ describe('API Herois test', () => {
     })
 
     it('deve atualizar um heroi', async () => {
-        const heroi = await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
+        const heroi = await mongoContext.create({ nome: `Homem Aranha`, poder: 'Teia' });
 
         const result = await api.inject({
             method: 'PATCH',
@@ -156,7 +177,7 @@ describe('API Herois test', () => {
 
         equal(statusCode, 200);
 
-        const [heroiAtualizado] = await context.read({ _id: heroi._id });
+        const [heroiAtualizado] = await mongoContext.read({ _id: heroi._id });
 
         equal(heroiAtualizado._id.toString(), heroi._id.toString());
         equal(heroiAtualizado.nome, 'Mulher Aranha');
@@ -179,7 +200,7 @@ describe('API Herois test', () => {
     })
 
     it('deve remover um heroi', async () => {
-        const heroi = await context.create({ nome: `Homem Aranha`, poder: 'Teia' });
+        const heroi = await mongoContext.create({ nome: `Homem Aranha`, poder: 'Teia' });
 
         const result = await api.inject({
             method: 'DELETE',
@@ -191,7 +212,7 @@ describe('API Herois test', () => {
 
         equal(statusCode, 200);
 
-        const herois = await context.read({ _id: heroi._id });
+        const herois = await mongoContext.read({ _id: heroi._id });
 
         equal(herois.length, 0);
     });

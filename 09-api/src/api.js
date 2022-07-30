@@ -69,12 +69,14 @@ async function startApp() {
             maxAgeSec: 14400, // 4 hours
             timeSkewSec: 15
         },
-        validate: (artifacts, request, h) => {
+        validate: async (artifacts, request, h) => {
             // pode verificar se o usuário continua ativo e válido
+            const username = artifacts.decoded.payload.username;
+            const [usuario] = await postgresContext.read({ username: username.toLowerCase() });
             
             return {
-                isValid: true,
-                credentials: { user: artifacts.decoded.payload.username }
+                isValid: usuario !== undefined,
+                credentials: { user: username }
             }
         }
     });
