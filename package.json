@@ -1,5 +1,5 @@
 {
-  "name": "09-api",
+  "name": "curso-apis-nodejs",
   "version": "1.0.0",
   "description": "http://localhost:8080",
   "main": "src/api.js",
