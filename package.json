@@ -2,16 +2,16 @@
   "name": "09-api",
   "version": "1.0.0",
   "description": "http://localhost:8080",
-  "main": "src/index.js",
+  "main": "src/api.js",
   "type": "module",
   "scripts": {
     "test": "mocha src/test/*.js",
     "test:watch": "mocha src/test/*.js -w",
-    "test:prod": "cross-env NODE_ENV=prod mocha src/test/*.js",
     "up": "docker-compose up -d",
     "down": "docker-compose down",
     "start": "nodemon src/api.js",
-    "prod": "cross-env NODE_ENV=prod src/api.js"
+    "prod": "cross-env NODE_ENV=prod src/api.js",
+    "deploy": "git push heroku master"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "@hapi/jwt": "^2.1.1",
     "@hapi/vision": "^7.0.0",
     "bcrypt": "^5.0.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "hapi-swagger": "^14.5.5",
     "joi": "^17.6.0",
