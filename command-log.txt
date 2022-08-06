@@ -22,3 +22,15 @@ db.getSiblingDB('heroes').createUser({user: 'admin', pwd: 'admin', roles: [{ rol
 
 ### pacotes
 npm install mongoose
+
+# Heroku
+heroku login
+heroku apps:create leoviveiros-apis-nodejs
+# https://leoviveiros-apis-nodejs.herokuapp.com/ | https://git.heroku.com/leoviveiros-apis-nodejs.git
+
+heroku git:remote --app leoviveiros-apis-nodejs
+heroku logs --app leoviveiros-apis-nodejs
+
+# Git
+git remote -v
+git push heroku master
