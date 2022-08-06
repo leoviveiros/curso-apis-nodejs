@@ -14,7 +14,7 @@ export class MongoDB extends Crud {
 
     static async connect() {
         return new Promise((resolve, reject) => {
-            connect('mongodb://admin:admin@localhost:27017/heroes', error => {
+            connect(process.env.MONGODB_URL, error => {
                 if (error) {
                     console.error('Falha ao conectar!', error);
                     reject(error);

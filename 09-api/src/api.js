@@ -1,3 +1,7 @@
+import { loadConfig } from './helpers/config-helper.js';
+
+loadConfig();
+
 import { Server } from '@hapi/hapi';
 
 import { ContextStrategy } from './db/strategies/base/context-strategy.js';
@@ -18,7 +22,8 @@ import HapiSwagger from 'hapi-swagger';
 
 import Joi from 'joi';
 
-const JWT_SECRET = 'secret-jwt-key';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function mapRoutes(instance, methods) {
     return methods.map(method => instance[method]());
@@ -26,7 +31,7 @@ function mapRoutes(instance, methods) {
 
 async function startApp() {
     const app = new Server({
-        port: 3000
+        port: process.env.PORT,
     });
 
     const mongoConnection = await MongoDB.connect();

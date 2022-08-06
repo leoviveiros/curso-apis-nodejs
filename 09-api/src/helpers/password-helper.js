@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 
 export class PasswordHelper {
-    static SALT = 3
+    static SALT = parseInt(process.env.PWD_SALT);
 
     static hash(password) {
         return bcrypt.hash(password, PasswordHelper.SALT);
