@@ -5,9 +5,11 @@ import { ok } from 'assert';
 export function loadConfig() {
     const env = process.env.NODE_ENV || 'dev';
 
-    ok(env === 'dev' || env === 'prod', 'Environment is not "dev" or "prod".');
+    ok(env === 'dev' || env === 'prod' || env === 'local-prod', 'Environment is not "dev", "local-prod" or "prod".');
 
-    const configPath = join(resolve(), './src/config', `.env.${env}`);
+    if (env === 'dev' || env === 'local-prod') {
+        const configPath = join(resolve(), './src/config', `.env.${env}`);
 
-    return config({ path: configPath });
+        return config({ path: configPath });
+    }
 }
