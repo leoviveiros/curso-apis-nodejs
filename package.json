@@ -11,8 +11,8 @@
     "up": "docker-compose up -d",
     "down": "docker-compose down",
     "start": "nodemon src/api.js",
-    "prod": "cross-env NODE_ENV=prod pm2 start src/api.js",
-    "local-prod": "cross-env NODE_ENV=local-prod nodemon src/api.js",
+    "prod": "cross-env NODE_ENV=prod pm2-runtime src/api.js",
+    "local-prod": "cross-env NODE_ENV=local-prod pm2-runtime src/api.js",
     "deploy": "git push heroku master",
     "logs": "heroku logs --tail --app leoviveiros-apis-nodejs"
   },
