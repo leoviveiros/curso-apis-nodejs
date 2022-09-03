@@ -1,7 +1,7 @@
 {
   "name": "curso-apis-nodejs",
   "version": "1.0.0",
-  "description": "http://localhost:8080",
+  "description": "http://localhost:3000/documentation",
   "main": "src/api.js",
   "type": "module",
   "scripts": {
@@ -11,7 +11,11 @@
     "down": "docker-compose down",
     "start": "nodemon src/api.js",
     "prod": "cross-env NODE_ENV=prod src/api.js",
-    "deploy": "git push heroku master"
+    "deploy": "git push heroku master",
+    "logs": "heroku logs --tail --app leoviveiros-apis-nodejs"
+  },
+  "engines": {
+    "node": "16.x"
   },
   "keywords": [],
   "author": "",
