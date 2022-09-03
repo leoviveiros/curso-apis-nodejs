@@ -9,13 +9,14 @@ export class PostgresDB extends Crud {
     }
 
     static async connect() {
-        // const connection = new Sequelize('heroes', 'postgres', 'postgres', {
         const connection = new Sequelize(process.env.POSTGRES_URL, {
             quoteIdentifiers: false,
             logging: false,
-            ssl: process.env.DB_SSL,
             dialectOptions: {
-                ssl: process.env.DB_SSL
+                ssl: {
+                    require: process.env.DB_SSL,
+                    rejectUnauthorized: false
+                }
             }
         });
 
