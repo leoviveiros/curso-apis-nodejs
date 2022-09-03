@@ -5,13 +5,13 @@
   "main": "src/api.js",
   "type": "module",
   "scripts": {
-    "preinstall": "npm install -g nodemon",
+    "preinstall": "npm install -g pm2",
     "test": "mocha src/test/*.js",
     "test:watch": "mocha src/test/*.js -w",
     "up": "docker-compose up -d",
     "down": "docker-compose down",
     "start": "nodemon src/api.js",
-    "prod": "cross-env NODE_ENV=prod nodemon src/api.js",
+    "prod": "cross-env NODE_ENV=prod pm2 start src/api.js",
     "local-prod": "cross-env NODE_ENV=local-prod nodemon src/api.js",
     "deploy": "git push heroku master",
     "logs": "heroku logs --tail --app leoviveiros-apis-nodejs"
