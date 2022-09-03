@@ -5,6 +5,7 @@
   "main": "src/api.js",
   "type": "module",
   "scripts": {
+    "preinstall": "npm install -g nodemon",
     "test": "mocha src/test/*.js",
     "test:watch": "mocha src/test/*.js -w",
     "up": "docker-compose up -d",
