@@ -30,6 +30,7 @@ heroku apps:create leoviveiros-apis-nodejs
 
 heroku git:remote --app leoviveiros-apis-nodejs
 heroku logs --app leoviveiros-apis-nodejs
+heroku run --app leoviveiros-apis-nodejs
 
 heroku addons:create heroku-postgresql:hobby-dev --app leoviveiros-apis-nodejs
 

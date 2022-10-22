@@ -12,12 +12,12 @@ export class PostgresDB extends Crud {
         const connection = new Sequelize(process.env.POSTGRES_URL, {
             quoteIdentifiers: false,
             logging: false,
-            dialectOptions: {
+            dialectOptions: process.env.DB_SSL === 'true' ? {
                 ssl: {
                     require: process.env.DB_SSL,
                     rejectUnauthorized: false
                 }
-            }
+            } : undefined,
         });
 
         return connection;

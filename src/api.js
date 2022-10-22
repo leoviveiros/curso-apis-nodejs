@@ -14,6 +14,7 @@ import { UsuarioModel } from './db/strategies/postgres/model/usuario-model.js';
 
 import { HeroisRoutes } from './routes/herois-routes.js';
 import { AuthRoutes } from './routes/auth-routes.js';
+import { UtilRoutes } from './routes/util-routes.js';
 
 import HapiJwt from '@hapi/jwt';
 import Vision from '@hapi/vision';
@@ -91,6 +92,7 @@ async function startApp() {
     app.route([
         ...mapRoutes(new AuthRoutes(JWT_SECRET, postgresContext), AuthRoutes.methods()),
         ...mapRoutes(new HeroisRoutes(mongoContext), HeroisRoutes.methods()),
+        ...mapRoutes(new UtilRoutes(), UtilRoutes.methods())
     ]);
 
     await app.start();
